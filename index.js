@@ -4,15 +4,17 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const userRoute = require("./routes/users");
-const userAuth = require("./routes/auth");
+const authRoute = require("./routes/auth");
 
 const app=express();
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO_URL,{useNewParser:true},()=>{
+mongoose.connect(process.env.MONGO_URL,{useNewUrlParser:true, useUnifiedTopology:true }).then(()=>{
     console.log("connected to mongodb");
-});
+}).catch((err)=>{
+    console.log(err);
+})
 
 //middleware
 app.use(express.json());
@@ -20,7 +22,7 @@ app.use(helmet());
 app.use(morgan("common"));
 
 app.use("/api/users",userRoute);
-app.use("/api/auth",userAuth);
+app.use("/api/auth",authRoute);
 
 
 
